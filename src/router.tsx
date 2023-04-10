@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "./routes/home/Home";
-import Navbar from "./features/Navbar/Navbar";
+import Navbar from "./features/navbar/Navbar";
+import Stations from "./routes/stations/Stations";
 
 const router = createBrowserRouter([
     {
@@ -11,10 +12,10 @@ const router = createBrowserRouter([
         </>,
     },
     {
-        path: "/test",
+        path: "/stations",
         element: <>
             <Navbar />
-            <div> TEST </div>
+            <Stations />
         </>,
     },
 ]);

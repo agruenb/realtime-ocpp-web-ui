@@ -13,8 +13,8 @@ export default function Navbar() {
         paths: ["/", "home"],
         name: "Home"
     }, {
-        paths: ["/test"],
-        name: "Test"
+        paths: ["/stations"],
+        name: "Stations"
     }], [])
 
     return (

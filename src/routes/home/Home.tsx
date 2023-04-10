@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useMemo } from "react";
 import { Pane, Tablist, Tab, Paragraph } from 'evergreen-ui'
+import RoutePage from "../../shared/layout/routePage/RoutePage";
 
 export default function Home() {
 
@@ -8,6 +9,8 @@ export default function Home() {
     const tabs = useMemo(() => ['Traits', 'Event History', 'Identities'], [])
 
     return (
-       <div>Hello</div>
+       <RoutePage>
+            Home
+       </RoutePage>
     )
 }
