@@ -1,9 +1,14 @@
-export interface StationTemplate {
+export type StationTemplate = {
     name: string,
     ocppIdentity: string
 }
-export interface Station {
+export type Station = {
     id: number,
     name: string,
     ocppIdentity: string
+}
+export type OcppSession = {
+    ocppIdentity: string,
+    stationName: string,
+    statusNotification: any
 }

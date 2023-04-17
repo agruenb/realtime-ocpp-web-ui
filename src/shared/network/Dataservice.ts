@@ -6,6 +6,11 @@ export default class DataService{
             method:"GET"
         });
     }
+    static async delete(endpoint:string){
+        return fetch(`${process.env.REACT_APP_API_HOST}${endpoint}`,{
+            method:"DELETE"
+        });
+    }
     static async post(endpoint:string, body:object){
         return fetch(`${process.env.REACT_APP_API_HOST}${endpoint}`,{
             method:"POST",
@@ -15,7 +20,17 @@ export default class DataService{
             body:JSON.stringify(body)
         });
     }
-    static async postStation(station:StationTemplate){
+    static async getOcppClientInfo(ocppIdentity?:string){
+        return this.get("/ocppClient").then(
+            resp => {
+                if (!resp.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return resp.json();
+            }
+        );
+    }
+    static async addStation(station:StationTemplate){
         return this.post("/ocppStation", station).then(
             resp => {
                 if (!resp.ok) {
@@ -27,6 +42,16 @@ export default class DataService{
     }
     static async getStation():Promise<Array<Station>>{
         return this.get("/ocppStation").then(
+            resp => {
+                if (!resp.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return resp.json();
+            }
+        );
+    }
+    static async deleteStation(id:number){
+        return this.delete(`/ocppStation/${id}`).then(
             resp => {
                 if (!resp.ok) {
                     throw new Error('Network response was not ok');

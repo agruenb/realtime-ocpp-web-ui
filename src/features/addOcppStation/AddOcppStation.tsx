@@ -1,6 +1,6 @@
 import { AddIcon, Button, Card, Pane, TextInputField } from "evergreen-ui";
 import { useState } from "react";
-import DataService from "../../shared/network/Dataservice";
+import DataService from "../../shared/network/DataService";
 import UiAlert from "../../shared/ui/UiAlert/UiAlert";
 
 export default function AddOcppStation(props: any) {
@@ -12,14 +12,14 @@ export default function AddOcppStation(props: any) {
     const [ocppId, setOcppId] = useState("");
     const [stationName, setStationName] = useState("");
 
-    function postStation() {
+    function addStation() {
         setInFlight(true);
         setStatusMessage("");
         let newStation = {
             ocppIdentity: ocppId,
             name: stationName
         }
-        DataService.postStation(newStation).then(
+        DataService.addStation(newStation).then(
             () => {
                 setStatusMessageType("success");
                 setStatusMessage(`Successfully added ${ocppId}`);
@@ -57,7 +57,7 @@ export default function AddOcppStation(props: any) {
             />
         </Pane>
         <Pane>
-            <Button iconBefore={AddIcon} appearance="primary" onClick={()=>postStation()}>Add Station</Button>
+            <Button iconBefore={AddIcon} appearance="primary" onClick={()=>addStation()}>Add Station</Button>
         </Pane>
     </Card>
 }
