@@ -3,6 +3,7 @@ import Home from "./routes/home/Home";
 import Navbar from "./features/navbar/Navbar";
 import Stations from "./routes/stations/Stations";
 import OcppSessions from "./routes/ocppSessions/OcppSessions";
+import OcppTransactions from "./routes/transactions/Transactions";
 
 const router = createBrowserRouter([
     {
@@ -26,5 +27,12 @@ const router = createBrowserRouter([
             <OcppSessions />
         </>,
     },
+    {
+        path: "/ocppTransactions",
+        element: <>
+            <Navbar />
+            <OcppTransactions />
+        </>,
+    }
 ]);
 export default router;

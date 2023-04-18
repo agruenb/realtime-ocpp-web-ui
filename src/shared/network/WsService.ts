@@ -6,4 +6,8 @@ export default class WsService{
         let ws = this.websocket("/ocppClient");
         return ws;
     }
+    static subscribeOcppTransactions(){
+        let ws = this.websocket("/transactions");
+        return ws;
+    }
 }

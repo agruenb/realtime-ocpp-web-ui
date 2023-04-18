@@ -18,6 +18,9 @@ export default function Navbar() {
     }, {
         paths: ["/ocppSessions"],
         name: "Ocpp Sessions"
+    }, {
+        paths: ["/ocppTransactions"],
+        name: "Ocpp Transactions"
     }], [])
 
     return (

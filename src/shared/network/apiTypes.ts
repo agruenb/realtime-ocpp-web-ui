@@ -9,6 +9,9 @@ export type Station = {
 }
 export type OcppSession = {
     ocppIdentity: string,
-    stationName: string,
     statusNotification: any
+}
+export type OcppTransaction = {
+    type:string,
+    info:any
 }
