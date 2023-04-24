@@ -39,7 +39,7 @@ export default function ListOcppSessions() {
         )
         .catch(
             (err:any) => {
-
+                console.log(err);
             }
         )
     }

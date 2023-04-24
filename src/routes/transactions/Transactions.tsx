@@ -1,7 +1,7 @@
 import { Heading, Pane, Tab, Tablist, majorScale } from "evergreen-ui";
 import RoutePage from "../../shared/layout/routePage/RoutePage";
 import { useState } from "react";
-import ListOcppTransactions from "../../features/listOcppTransactions/ListOcppTransactions";
+import ListOcppLiveTransactions from "../../features/listOcppLiveTransactions/ListOcppLiveTransactions";
 
 export default function OcppTransactions(){
 
@@ -10,7 +10,7 @@ export default function OcppTransactions(){
 
     return <RoutePage>
         <Heading is="h2" size={900} marginBottom={majorScale(5)}>Ocpp Transactions</Heading>
-        <ListOcppTransactions />
+        <ListOcppLiveTransactions />
         
     </RoutePage>
 }
