@@ -1,4 +1,4 @@
-import { Station, StationTemplate } from "./apiTypes";
+import { OcppTransactionFinal, Station, StationTemplate } from "./apiTypes";
 
 export default class DataService{
     static async get(endpoint:string){
@@ -52,6 +52,16 @@ export default class DataService{
     }
     static async deleteStation(id:number){
         return this.delete(`/ocppStation/${id}`).then(
+            resp => {
+                if (!resp.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return resp.json();
+            }
+        );
+    }
+    static async getTransaction():Promise<Array<OcppTransactionFinal>>{
+        return this.get("/transaction").then(
             resp => {
                 if (!resp.ok) {
                     throw new Error('Network response was not ok');

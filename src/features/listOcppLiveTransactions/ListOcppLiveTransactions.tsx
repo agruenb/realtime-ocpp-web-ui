@@ -1,7 +1,7 @@
 import { Table } from "evergreen-ui";
 import { useEffect, useRef, useState } from "react";
 import WsService from "../../shared/network/WsService";
-import { OcppTransaction } from "../../shared/network/apiTypes";
+import { OcppTransactionUpdate } from "../../shared/network/apiTypes";
 import DataService from "../../shared/network/DataService";
 
 export type LiveTransaction = {
@@ -22,7 +22,7 @@ export default function ListOcppLiveTransactions() {
     const transactionsRef = useRef(transactions);
     transactionsRef.current = transactions;
 
-    function liveTransactionFromOcppStartTransaction(transaction:OcppTransaction):LiveTransaction{
+    function liveTransactionFromOcppStartTransaction(transaction:OcppTransactionUpdate):LiveTransaction{
         return {
             transactionId: transaction.info.transactionId,
             ocppIdentity: transaction.info.ocppIdentity,
@@ -34,7 +34,7 @@ export default function ListOcppLiveTransactions() {
             meterStop: -1
         }
     }
-    function mergeStartAndStopTransaction(startedTransaction:LiveTransaction, stopTransaction:OcppTransaction){
+    function mergeStartAndStopTransaction(startedTransaction:LiveTransaction, stopTransaction:OcppTransactionUpdate){
         return {
             ...startedTransaction,
             finished: stopTransaction.info.timestamp,
@@ -42,7 +42,7 @@ export default function ListOcppLiveTransactions() {
         }
     }
 
-    function updateTransactions(updated:Array<OcppTransaction>){
+    function updateTransactions(updated:Array<OcppTransactionUpdate>){
         //update started transactions
         let newTransactions:Array<LiveTransaction> = transactionsRef.current.map((oldTransaction) => {
             const matchIndexInUpdated = updated.findIndex(
@@ -89,7 +89,7 @@ export default function ListOcppLiveTransactions() {
     function subscribeToOcppTransactions(){
         let socket = WsService.subscribeOcppTransactions();
         socket.addEventListener("message", msg => {
-            let updatedTransactions:Array<OcppTransaction> = JSON.parse(msg.data);
+            let updatedTransactions:Array<OcppTransactionUpdate> = JSON.parse(msg.data);
             updateTransactions(updatedTransactions);
         })
         return socket;

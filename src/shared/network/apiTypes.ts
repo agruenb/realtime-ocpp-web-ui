@@ -11,7 +11,17 @@ export type OcppSession = {
     ocppIdentity: string,
     statusNotification: any
 }
-export type OcppTransaction = {
+export type OcppTransactionUpdate = {
     type:string,
     info:any
+}
+export type OcppTransactionFinal = {
+    transactionId: number,
+    ocppIdentity: string,
+    connectorId: number,
+    meterStart: number,
+    meterStop: number,
+    timestampStart: string,
+    timestampStop: string
+    idTag?: string,
 }

@@ -10,17 +10,14 @@ export default function Navbar() {
     const location = useLocation();
 
     const tabs = useMemo(() => [{
-        paths: ["/", "home"],
-        name: "Home"
-    }, {
         paths: ["/stations"],
         name: "Stations"
     }, {
         paths: ["/ocppSessions"],
-        name: "Ocpp Sessions"
+        name: "Sessions"
     }, {
         paths: ["/ocppTransactions"],
-        name: "Ocpp Transactions"
+        name: "Transactions"
     }], [])
 
     return (

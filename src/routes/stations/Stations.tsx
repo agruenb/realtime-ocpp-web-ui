@@ -40,6 +40,5 @@ export default function Stations() {
         >
             <AddOcppStation />
         </Pane>
-        
     </RoutePage>
 }

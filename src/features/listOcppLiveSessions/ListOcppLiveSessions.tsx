@@ -1,4 +1,4 @@
-import { Button, Table } from "evergreen-ui";
+import { Table } from "evergreen-ui";
 import { useEffect, useRef, useState } from "react";
 import WsService from "../../shared/network/WsService";
 import { OcppSession } from "../../shared/network/apiTypes";
