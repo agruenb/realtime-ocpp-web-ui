@@ -1,4 +1,4 @@
-import { OcppTransactionFinal, Station, StationTemplate } from "./apiTypes";
+import { OcppTransaction, Station, StationTemplate } from "./apiTypes";
 
 export default class DataService{
     static async get(endpoint:string){
@@ -60,7 +60,7 @@ export default class DataService{
             }
         );
     }
-    static async getTransaction():Promise<Array<OcppTransactionFinal>>{
+    static async getTransaction():Promise<Array<OcppTransaction>>{
         return this.get("/transaction").then(
             resp => {
                 if (!resp.ok) {

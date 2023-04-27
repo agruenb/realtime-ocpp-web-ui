@@ -15,13 +15,13 @@ export type OcppTransactionUpdate = {
     type:string,
     info:any
 }
-export type OcppTransactionFinal = {
+export type OcppTransaction = {
+    id: number,
     transactionId: number,
     ocppIdentity: string,
-    connectorId: number,
     meterStart: number,
-    meterStop: number,
+    meterStop?: number,
     timestampStart: string,
-    timestampStop: string
+    timestampStop?: string
     idTag?: string,
 }
