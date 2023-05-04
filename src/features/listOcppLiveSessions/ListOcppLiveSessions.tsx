@@ -70,7 +70,7 @@ export default function ListOcppSessions() {
             </Table.Head>
             <Table.Body>
                 {sessions.map((session, index) => (
-                    <Table.Row key={index}>
+                    <Table.Row key={index} intent={(Date.now() - session.lastSeen > 8000)?"danger":"none"}>
                         <Table.TextCell flexBasis={48} flexShrink={0} flexGrow={0}>{index}</Table.TextCell>
                         <Table.TextCell>{session.ocppIdentity}</Table.TextCell>
                         <Table.TextCell>{session.statusNotification?.status}</Table.TextCell>
