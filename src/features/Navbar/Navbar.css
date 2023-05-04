@@ -1,7 +1,0 @@
-.navbar{
-    background: #fbfbfa;
-    border-right: 1px solid #efefee;
-}
-.navbar .tab[aria-disabled="true"][aria-current="page"], .navbar .tab[aria-selected="true"] {
-    background-color: #efefee;
-}
