@@ -10,7 +10,6 @@ export default function ListOcppTransactions() {
     function fetchTransactions() {
         return DataService.getTransaction().then(
             (resp) => {
-                console.log(resp);
                 setTransactions(resp);
             }
         )

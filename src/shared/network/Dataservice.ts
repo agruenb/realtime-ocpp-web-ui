@@ -1,3 +1,4 @@
+import { LiveTransaction } from "../../features/listOcppLiveTransactions/ListOcppLiveTransactions";
 import { OcppTransaction, Station, StationTemplate } from "./apiTypes";
 
 export default class DataService{
@@ -62,6 +63,16 @@ export default class DataService{
     }
     static async getTransaction():Promise<Array<OcppTransaction>>{
         return this.get("/transaction").then(
+            resp => {
+                if (!resp.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return resp.json();
+            }
+        );
+    }
+    static async getUnfinishedTransactions():Promise<Array<OcppTransaction>>{
+        return this.get("/transaction?unfinished=true").then(
             resp => {
                 if (!resp.ok) {
                     throw new Error('Network response was not ok');

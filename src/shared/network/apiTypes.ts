@@ -20,6 +20,7 @@ export type OcppTransaction = {
     id: number,
     transactionId: number,
     ocppIdentity: string,
+    connectorId: number,
     meterStart: number,
     meterStop?: number,
     timestampStart: string,

@@ -1,7 +1,7 @@
 import { Table } from "evergreen-ui";
 import { useEffect, useRef, useState } from "react";
 import WsService from "../../shared/network/WsService";
-import { OcppTransactionUpdate } from "../../shared/network/apiTypes";
+import { OcppTransaction, OcppTransactionUpdate } from "../../shared/network/apiTypes";
 import DataService from "../../shared/network/DataService";
 
 export type LiveTransaction = {
@@ -9,10 +9,11 @@ export type LiveTransaction = {
     ocppIdentity: string,
     connectorId: number,
     meterStart: number,
-    started: string,
-    finished?: string
+    timestampStart: string,
+    timestampStop?: string
     idTag?: string,
-    meterStop?: number
+    meterStop?: number,
+    meterValue?: any
 }
 
 export default function ListOcppLiveTransactions() {
@@ -28,55 +29,78 @@ export default function ListOcppLiveTransactions() {
             ocppIdentity: transaction.info.ocppIdentity,
             connectorId: transaction.info.connectorId,
             meterStart: transaction.info.meterStart,
-            started: transaction.info.timestamp,
-            finished: "",
+            timestampStart: transaction.info.timestamp,
+            timestampStop: "",
             idTag: transaction.info.idTag || "",
-            meterStop: -1
+            meterStop: -1,
+            meterValue: []
+        }
+    }
+    function liveTransactionFromOcppTransaction(transaction:OcppTransaction):LiveTransaction{
+        return {
+            transactionId: transaction.id,
+            ocppIdentity: transaction.ocppIdentity,
+            connectorId: transaction.connectorId,
+            meterStart: transaction.meterStart,
+            timestampStart: transaction.timestampStart,
+            timestampStop: transaction.timestampStop || "",
+            idTag: transaction.idTag || "",
+            meterStop: transaction.meterStop || -1
         }
     }
     function mergeStartAndStopTransaction(startedTransaction:LiveTransaction, stopTransaction:OcppTransactionUpdate){
         return {
             ...startedTransaction,
-            finished: stopTransaction.info.timestamp,
-            meterStop: stopTransaction.info.timestamp
+            timestampStop: stopTransaction.info.timestamp,
+            meterStop: stopTransaction.info.meterStop
         }
     }
 
     function updateTransactions(updated:Array<OcppTransactionUpdate>){
-        //update started transactions
-        let newTransactions:Array<LiveTransaction> = transactionsRef.current.map((oldTransaction) => {
-            const matchIndexInUpdated = updated.findIndex(
-                updatedTransaction => updatedTransaction.info.transactionId === oldTransaction.transactionId
-            );
-            if(matchIndexInUpdated !== -1 && updated[matchIndexInUpdated].type === "stopTransaction"){
-                return mergeStartAndStopTransaction(oldTransaction, updated[matchIndexInUpdated]);
-            }else if(matchIndexInUpdated !== -1 && updated[matchIndexInUpdated].type === "startTransaction"){
-                console.warn("Duplicate started transaction", updated[matchIndexInUpdated])
-            }
-            return {...oldTransaction};
+        let currentTransactions = transactionsRef.current;
+        let newTransactions:Array<LiveTransaction> = currentTransactions.map( trans => {
+            return {...trans}
         });
-        //append new transactions
-        for(const updatedTransaction of updated){
-            //find started session with same id
-            const i = transactionsRef.current.findIndex( oldTransaction => 
-                updatedTransaction.info.transactionId === oldTransaction.transactionId
-            );
-            if(i === -1 && updatedTransaction.type === "startTransaction"){
-                newTransactions.push(
-                    liveTransactionFromOcppStartTransaction(updatedTransaction)
-                );
-            }else if(i === -1 && updatedTransaction.type === "stopTransaction"){
-                console.warn("Got finished transaction without start", updatedTransaction);
-            }
+        for(let transactionUpdate of updated){
+            switch(transactionUpdate.type){
+                case "stopTransaction":
+                    let matchingCurrentTransaction = newTransactions.filter(trans => {
+                        return trans.transactionId === transactionUpdate.info.transactionId;
+                    })[0];
+                    if(!matchingCurrentTransaction){
+                        console.warn("Got stopTransaction for unknown transaction");
+                        break;
+                    }
+                    let mergedTransaction = mergeStartAndStopTransaction(matchingCurrentTransaction, transactionUpdate);
+                    let index = newTransactions.indexOf(matchingCurrentTransaction);
+                    newTransactions.splice(index, 1, mergedTransaction);
+                    break;
+                case "meterValuesTransaction":
+                    console.log("Got meter values");
+                    break;
+                case "startTransaction":
+                    let existingTransaction = newTransactions.findIndex( trans => {
+                        return trans.transactionId === transactionUpdate.info.transactionId;
+                    })
+                    if(existingTransaction !== -1){
+                        console.warn("Got duplicate startTransaction");
+                        break;
+                    }
+                    newTransactions.push(
+                        liveTransactionFromOcppStartTransaction(transactionUpdate)
+                    );
+                    break;
+            }   
         }
         setTransactions(newTransactions);
     }
 
-    /* function fetchSessions(){
-        DataService.getOcppClientInfo()
+    function fetchTransactions(){
+        DataService.getUnfinishedTransactions()
         .then(
-            (resp:any) => {
-                updateSessions(resp);
+            (resp) => {
+                console.log(resp);
+                setTransactions(resp.map(trans => liveTransactionFromOcppTransaction(trans)));
             } 
         )
         .catch(
@@ -84,19 +108,20 @@ export default function ListOcppLiveTransactions() {
 
             }
         )
-    } */
+    }
 
     function subscribeToOcppTransactions(){
         let socket = WsService.subscribeOcppTransactions();
         socket.addEventListener("message", msg => {
             let updatedTransactions:Array<OcppTransactionUpdate> = JSON.parse(msg.data);
+            console.log("trans WS:", updatedTransactions);
             updateTransactions(updatedTransactions);
         })
         return socket;
     }
 
     useEffect(()=>{
-        /* fetchSessions(); */
+        fetchTransactions();
         const socket = subscribeToOcppTransactions();
         return () => {
             socket.close();
@@ -118,9 +143,11 @@ export default function ListOcppLiveTransactions() {
                         <Table.TextCell flexBasis={48} flexShrink={0} flexGrow={0}>{transaction.transactionId}</Table.TextCell>
                         <Table.TextCell>{transaction.ocppIdentity}</Table.TextCell>
                         <Table.TextCell>{transaction.connectorId}</Table.TextCell>
-                        <Table.TextCell>{transaction.started}</Table.TextCell>
                         <Table.TextCell>{
-                            (transaction.finished==="")?"Live":"Finished"
+                            (new Date(transaction.timestampStart)).toLocaleTimeString("en-US")
+                        }</Table.TextCell>
+                        <Table.TextCell>{
+                            (transaction.timestampStop && transaction.timestampStop !== "")?"Finished":"Open"
                         }</Table.TextCell>
                     </Table.Row>
                 ))}
