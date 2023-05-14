@@ -10,6 +10,9 @@ export default function Navbar() {
     const location = useLocation();
 
     const tabs = useMemo(() => [{
+        paths: ["/"],
+        name: "Home"
+    },{
         paths: ["/stations"],
         name: "Stations"
     }, {

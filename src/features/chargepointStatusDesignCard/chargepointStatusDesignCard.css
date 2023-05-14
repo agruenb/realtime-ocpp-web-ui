@@ -1,0 +1,81 @@
+.cp-design-card{
+    width: 340px;
+    border-radius:24px;
+    position:relative;
+    padding:15px;
+    margin:25px;
+}
+.header-bar{
+    margin-left:75px;
+    margin-bottom: 10px;
+}
+.chargebox-img-container{
+    height:100px;
+    width:100px;
+    border-radius: 50%;
+    position:absolute;
+    top: -25px;
+    left: -25px;
+    background-color: white;
+}
+.chargebox-img-container img{
+    width: 90px;
+    height: 90px;
+    margin: 5px;
+}
+.connector-card{
+    margin-top: 2px;
+    box-sizing: border-box;
+    width:100%;
+    padding:12px;
+    background-color: #e7fde9;
+}
+.connector-card:first-child{
+    border-radius: 12px 12px 0 0;
+}
+.connector-card:last-child{
+    border-radius: 0 0 12px 12px;
+}
+.connector-card .name{
+    font-size:14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #484848;
+}
+.connector-card .name svg{
+    margin-right:8px;
+}
+.connector-card .status-top{
+    display:flex;
+    justify-content: space-between;
+    font-size:14px;
+    color: #1cae2a;
+}
+.connector-card .status-bottom{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height:12px;
+}
+.connector-card .status-bar{
+    width:100%;
+    height:4px;
+    border-radius:2px;
+    background-color: #1cae2a;
+}
+
+
+
+.card-shadow{
+    box-shadow: 0 5px 10px rgba(200, 200, 200, 0.9);
+}
+.card-title{
+    font-weight:bold;
+    font-size: 22px;
+}
+.card-sub{
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: bold;
+}
